@@ -1,0 +1,28 @@
+---
+title: "Stability (koleva data)"
+author: "LCP"
+date: "2/12/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r stab1, include=TRUE, echo=TRUE}
+library(car)
+setwd("c:/data/csv")
+koleva <-read.csv("koleva.csv", header=TRUE)
+bbatch <-as.character(batch)
+#head(koleva)
+model <-lm(assay...~month*batch+batch+month, data=koleva)
+summary(model)
+anova(model)
+Anova(model, type="III")
+```
+
+
+
+
