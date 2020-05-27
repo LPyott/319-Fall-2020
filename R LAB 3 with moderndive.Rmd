@@ -1,0 +1,33 @@
+---
+title: "Untitled"
+author: "YOUR NAME HERE"
+date: "2/16/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggplot2)
+library(moderndive)
+setwd("c:/data/CSV")
+boilers <- read.csv("boilers.csv", header=TRUE)
+#https://moderndive.github.io/moderndive/
+```
+
+```{r}
+
+model <- lm(ManHours ~ Capacity+Pressure, data = boilers)
+
+get_regression_table(model, print=TRUE)
+#get_regression_points(model)
+summ<-get_regression_summaries(model)
+r2<-summ$adj_r_squared
+names(summ)
+
+#ggplot(model, aes(x = Capacity, y = ManHours, color = Boiler)) +
+  #geom_point() +
+  #geom_parallel_slopes(se = FALSE)
+```
+
+The value for adjusted R2=`r r2`. 

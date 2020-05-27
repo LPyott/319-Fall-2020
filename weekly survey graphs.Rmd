@@ -1,0 +1,49 @@
+---
+title: "Survey Results"
+author: "LCP"
+date: "2/16/2020"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+setwd("c:/data/CSV")
+survey <- read.csv("Rsurvey.csv", header=TRUE)
+library(tidyverse)
+names(survey)
+```
+
+
+```{r data, echo=FALSE, include=TRUE, warning=FALSE, message=FALSE, tidy=TRUE}
+survey %>%
+  group_by(week) %>%
+  summarize(avg.rating=mean(rating)) 
+
+a<-ggplot(data=survey, aes(x=rating))+
+  geom_histogram(data=subset(survey, week==1), fill="red")+
+   theme(plot.background=element_blank(), 
+        plot.title = element_text(hjust = 0.5)) +
+  ggtitle("Week 1 Survey Results")
+
+b<-ggplot(data=survey, aes(x=rating))+
+     theme(plot.background=element_blank(), 
+        plot.title = element_text(hjust = 0.5)) +
+  geom_histogram(data=subset(survey, week==2), fill="blue")+
+  ggtitle("Week 2 Survey Results")
+
+c<-ggplot(data=survey, aes(x=rating))+
+     theme(plot.background=element_blank(), 
+        plot.title = element_text(hjust = 0.5)) +
+  geom_histogram(data=subset(survey, week==3), fill="green")+
+  ggtitle("Week 3 Survey Results")
+
+d<-ggplot(data=survey, aes(x=rating))+
+  theme(plot.background=element_blank(), 
+        plot.title = element_text(hjust = 0.5)) +
+  geom_histogram(data=subset(survey, week==4), fill="orange")+
+  ggtitle("Week 4 Survey Results")
+a
+b
+c
+d
+```

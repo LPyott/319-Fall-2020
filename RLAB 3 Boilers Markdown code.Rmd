@@ -1,0 +1,88 @@
+---
+title: "RLAB 3 Markdown"
+author: "LCP"
+date: "1/16/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.width=4, fig.height=4, echo = FALSE, warning=FALSE, message=FALSE, comment=NA)
+options(digits=3)
+```
+Boilers
+
+In a production facility, an accurate estimate of hours needed to complete a task is crucial to management in making such decisions as hiring the proper number of workers, quoting an accurate deadline for a client, or performing cost analyses and regarding budgets.  A manufacturer of boiler drums wants to use regression to predict the number of hours needed to erect the drums in future projects. To accomplish this task, data on 36 boilers were collected.  In addition the hours (y), the variables measured were boiler capacity (x1=lb/hr) and boiler design pressure (x2=pounds per square inch, or psi).
+
+$~$
+
+1.Create two scatterplots, one for each independent variable versus y.
+
+```{r}
+#RLAB #3
+#Data=Boilers
+
+setwd("c:/data/CSV")
+
+boilers <- read.csv("boilers.csv", header=TRUE)
+
+#names(boilers)
+
+#1. create scatterplots
+
+plot(boilers$Capacity,boilers$ManHours,xlab='Capacity', ylab='Hours', main="Hours vs. Capacity")
+plot(boilers$Pressure,boilers$ManHours,xlab='Pressure', ylab='Hours', main="Hours vs. Pressure")
+```
+
+
+
+2.Hypothesized model
+*y=Bo+B1x1+B2x2+B3x1x2+e*
+
+
+3.Linear Regression Analysis
+``` {r}
+
+model <- lm(ManHours~Capacity+Pressure+Capacity*Pressure, data=boilers)
+summary(model)
+modelsummary <-summary(model)
+#names(modelsummary)
+#names(model)
+```
+
+$~$
+
+The linear regression model is ManHours= `r model$coefficients[1]`Capacity + `r model$coefficients[2]`Pressure + `r model$coefficients[3]`CapacityxPressure.
+
+
+
+``` {r}
+sigma <- modelsummary$sigma
+y_bar <- mean(boilers$ManHours)
+cv <- (sigma/y_bar)*100
+#sigma
+#y_bar
+#cv
+```
+
+$~$
+
+4.Model Utility
+
+Statistic | Value
+--------- |------
+adjusted R squared | `r modelsummary$adj.r.squared`
+CV | `r cv`
+F (p) | `r modelsummary$fstatistic` (p<.001)
+The coefficient of determination is  `r modelsummary$adj.r.squared`. The F-test statistic is `r modelsummary$fstatistic` (p<.001). The coefficient of variation is `r cv`.
+
+$~$
+
+5.Prediction and Estimation
+``` {r}
+newdata <-data.frame(Capacity=441000, Pressure=410)
+predinterval <-predict(model, newdata, interval="prediction")
+confinterval <-predict(model, newdata, interval="confidence")
+#predinterval 
+```
+
+For a boiler with capacity=441,000 and pressure=410, the equation predicts Hours to be `r predinterval[1]`. A 95% prediction interval is (`r predinterval[2]`, `r predinterval[3]`). A 95% confidence interval is (`r confinterval[2]`, `r confinterval[3]`).

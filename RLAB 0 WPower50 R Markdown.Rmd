@@ -1,0 +1,131 @@
+---
+title: "RLAB #0 MARKDOWN"
+author: "Professor Pyott"
+date: "1/15/2020"
+output: html_document
+---
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(fig.width=4, fig.align="center", fig.height=4, echo = TRUE, warning=FALSE, message=FALSE, comment=NA)
+options(digits=3)
+#This is your first "chunk" of code
+#It is easier to work in chunks that can be run individually to check for errors
+#Then all chunks can be "knit" together
+#You do not need to remove these comments
+#In this first section, you should set your working directory and read in the .csv data set
+#Also load any libraries that you need to execute your code
+#You can also use the names or head function to get an idea of what the data looks like
+#However, all of that stuff will show up in your final document. You can delete later.
+
+library(ggplot2)
+
+setwd("C:/data/CSV")
+
+wpower <- read.csv("WPOWER50.csv", header = TRUE)
+
+#you can just run the code chunk using the arrow to the right
+#then the output shows up below
+#once you find what you need, you can comment out or delete code
+head(wpower)
+names(wpower)
+```
+
+Any typing outside of the tildes will show up in your Word document. See? :-)
+
+Description:
+
+In 2008, Fortune Magazine published a list of the 50 most powerful women in business in the United States. 
+
+Assignment:
+
+1. Generate a histogram of the variable Age. 
+
+
+```{r}
+
+hist(wpower$AGE,freq=FALSE,xlab="age",ylab='Relative Frequency',col="blue", main = "Age Distribution")
+
+#If you run just the code chunk by itself, you can see the graph so that you can answer the question
+#To do that, click on the right arrow in the upper right hand corner of this box
+```
+
+2. What is the shape of the distribution?
+
+*I think the distribution of the age variable is skewed slightly to the left.*
+
+
+3. Here are the descriptive statistics for the variable Age:
+
+Notice that all of the descriptive statistics print, but without labels. We could either include the code so that we know which numbers represent which statistics. Or we can "call" the values into the Markdown file using the code *tilde r variable tilde.*
+
+```{r}
+#In this code chunk, we get the summary stats in two ways. The first way,
+#we get the five number summary plus the mean with the summary function
+#the second way is by calling each individual summary stat function
+#we don't necessarily need to assign each value a name, but
+#if we want to include the values in the written text, they need to be assigned
+
+summ <-summary(wpower$AGE)
+summ
+
+#Sample Mean #
+
+y_bar<-mean(wpower$AGE)
+y_bar
+
+#Sample Median #
+median(wpower$AGE)
+y_mid<-median(wpower$AGE)
+y_mid
+
+#Variance #
+
+y_var<-var(wpower$AGE)
+y_var
+
+#Sample S.D #
+
+y_sd<-sd(wpower$AGE)
+y_sd
+
+n <- length(wpower$AGE)
+n
+
+upperlim <- y_bar + 2*y_sd
+lowerlim <- y_bar - 2*y_sd
+
+#Notice below that I can call a named quantity into the text of the document by using the code: 
+        # `r quantity`
+
+```
+
+#THIS TEXT REPORTS SUMMARY STATS IN PARAGRAPH FORM.
+
+*The mean of the sample is `r y_bar` years. The median is M=`r y_mid`. The variance is s^2^=`r y_var`. The sample standard deviation is s=`r y_sd` years. The sample size is n=`r n`.*
+
+#THIS TEXT MAKES A TABLE
+
+|DESCRIPTIVE STATISTICS|
+|------|-------|
+| N |  `r n`|
+|Sample Mean | `r y_bar`|
+|Sample Median | `r y_mid`|
+|Sample Variance | `r y_var`|
+|Sample Standard Deviation | `r y_sd`|
+
+
+4. *The two standard deviation interval is (`r lowerlim`, `r upperlim`).*
+
+```{r}
+
+stem(wpower$AGE)
+
+#Run this chunk and look at the graph
+#count the number of observations that fall out of the interval
+# 50 (total)-3 (outside)=47 in the interval
+#remember that you can use R as a simple calculator!
+
+100*47/50
+```
+
+5. *Exactly 47 of 50 observations fall within 2 standard deviations of the mean. This is 94% of the sample.*

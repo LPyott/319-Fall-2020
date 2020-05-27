@@ -1,0 +1,40 @@
+---
+title: "Untitled"
+author: "LCP"
+date: "1/5/2020"
+output: word_document
+---
+1 Scatterplot for mortality (y) vs. latitude-shows a strong negative relationship.
+```{r skin, echo=FALSE}
+ setwd("C:/data/CSV")
+library(rockchalk)
+skin <-read.csv("skincancer.csv", header=T)
+plot(skin$Mort, skin$Lat)
+
+
+model <- lm(Mort~Lat, data=skin)
+summary(model)
+rsq <-summary(model)$r.squared
+#Prediction and Estimation
+#Create a new data frame for new observation
+newdata<-data.frame(Lat=40)
+
+#Predicted 95% Confidence intervals for mean and individual values#
+fitpredicted<-predict(model,newdata, level=.95,interval="prediction")
+
+fitmean<-predict(model,newdata, level=.95, interval="confidence")
+
+#Predcited value plus confidence intervals for latitude=40
+
+ setwd("C:/data/CSV")
+fitpredicted<-predict(model,newdata, level=.95,interval="prediction")
+
+fitmean<-predict(model,newdata, level=.95, interval="confidence")
+
+#Predcited value plus confidence intervals for latitude=40
+fitpredicted
+fitmean
+```
+Regression equation: Skin Cancer Mortality = `r model$coefficients[1]` + `r model$coefficients[2]` * latitude 
+
+R-squared value= `r rsq`

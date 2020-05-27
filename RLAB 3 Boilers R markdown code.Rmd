@@ -1,0 +1,72 @@
+---
+title: "Untitled"
+author: "YOUR NAME HERE"
+date: "2/16/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+setwd("c:/data/CSV")
+
+boilers <- read.csv("boilers.csv", header=TRUE)
+
+names(boilers)
+```
+
+TEXT SECTION 1
+
+```{r scatterplots}
+#create scatterplots
+plot(boilers$Capacity,boilers$ManHours,xlab='Capacity', ylab='Hours', main="Hours vs. Capacity")
+plot(boilers$Pressure,boilers$ManHours,xlab='Pressure', ylab='Hours', main="Hours vs. Pressure")
+
+```
+
+TEXT SECTION 2
+
+```{r regression}
+#linear regression analysis
+model <- lm(ManHours~Capacity+Pressure, data=boilers)
+modelsummary <- summary(model)
+modelsummary
+
+#Model utility
+sigma <- modelsummary$sigma
+y_bar <- mean(boilers$ManHours)
+cv <- (sigma/y_bar)*100
+sigma
+y_bar
+cv
+```
+
+TEXT SECTION 3
+
+```{r prediction}
+#prediction and estimation
+newdata <-data.frame(Capacity=441000, Pressure=410)
+predict(model, newdata, interval="prediction")
+predict(model, newdata, interval="confidence")
+```
+
+TEXT SECTION 4
+
+```{r residuals}
+#residual analysis
+errors<-residuals(model)
+#errors
+
+mean(errors)
+hist(errors)
+qqnorm(errors)
+qqline(errors)
+yhat <- fitted(model)
+newerdata <- cbind(boilers, errors)
+newestdata <- cbind(newerdata, yhat)
+plot(newestdata$yhat, newestdata$errors)
+abline(h=0, col="blue")
+```
+
+TEXT SECTION 5
+

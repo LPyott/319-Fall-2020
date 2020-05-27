@@ -1,0 +1,71 @@
+---
+title: 'RLAB #2 Grandfather clocks'
+author: "LCP"
+date: "2/5/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+setwd("c:/data/csv")
+clocks <-read.csv("clocks.csv", header=TRUE)
+```
+
+A Collector of antique grandfather clocks sold at auction believes that the price received for the clocks depends on both the age of the clocks (x1) and the number of bidders at the auction (x2). 
+
+
+
+```{r meanprice, include=FALSE}
+#Mean for the CV
+#This output won't show up in the html file because Include=FALSE
+y_bar <- mean(clocks$PRICE)
+y_bar
+```
+
+
+
+```{r model1, echo=FALSE, include=TRUE}
+model1 <-lm(PRICE~AGE, data=clocks)
+summary(model1)
+```
+
+This text should include the linear regression equation, and your model utility checks for model #1.
+
+
+```{r model2, echo=FALSE, include=TRUE}
+model2 <-lm(PRICE~NUMBIDS, data=clocks)
+summary(model2)
+```
+
+This text should include the linear regression equation, and your model utility checks for model #2.
+
+
+Choose the model that's better and write about it here.
+```{r predictions, echo=FALSE}
+#Predicted 95% Confidence intervals for mean and individual values
+
+newdata <-data.frame(AGE=160,NUMBIDS=11)
+
+#STOP
+#Son't run the code below until you choose your model
+#Make sure you enter your choden model in place of ???
+
+fitpredicted<-predict(model1,newdata, level=.95,interval="prediction")
+fitpredicted
+fitmean<-predict(model1,newdata, level=.95, interval="confidence")
+fitmean
+```
+Using model #??, the predicted value of a clock that is 160 years old and is bid on by 11 bidders is ...
+
+95% confidence interval
+95% prediction interval
+
+
+```{r scatterplots, fig.height=4, fig.width=6, echo=FALSE}
+#Scatteplots for each predictor vs. price
+plot(clocks$AGE, clocks$PRICE, xlab="Age", ylab="Price")
+abline(lm(PRICE~AGE, data=clocks), col="red")
+plot(clocks$NUMBIDS, clocks$PRICE, xlab="Number of Bidders", ylab="Price")
+abline(lm(PRICE~NUMBIDS, data=clocks), col="green")
+```
+

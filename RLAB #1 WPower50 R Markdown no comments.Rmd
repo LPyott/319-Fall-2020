@@ -1,0 +1,101 @@
+---
+title: "RLAB #1 MARKDOWN"
+author: "Professor Pyott"
+date: "1/15/2020"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.width=4, fig.height=4,echo = FALSE, warning=FALSE, message=FALSE, comment=NA)
+options(digits=3)
+
+setwd("C:/data/CSV")
+
+wpower <- read.csv("WPOWER50.csv", header = TRUE)
+head(wpower)
+names(wpower)
+```
+
+Data:
+
+Wpower50
+
+Description:
+
+Fortune (10/16/2008) published a list of the 50 most powerful women in business in the United States. The Data on age (in years) and title of each of these 50 women are included in the data set.
+
+Assignment:
+
+1. Generate a histogram of the variable Age. 
+
+
+```{r}
+
+hist(wpower$AGE,freq=FALSE,xlab="age",ylab='Relative Frequency',col="blue", main = "Age Distribution")
+
+```
+
+2. What is the shape of the distribution?
+
+*I think the distribution of the age variable is skewed slightly to the left.*
+
+
+3. Here are the descriptive statistics for the variable Age:
+
+
+```{r}
+
+summ <-summary(wpower$AGE)
+#summ
+
+#Mean
+y_bar<-mean(wpower$AGE)
+#y_bar
+
+#Median
+y_mid<-median(wpower$AGE)
+#y_mid
+
+#Variance
+y_var<-var(wpower$AGE)
+#y_var
+
+#S.D 
+y_sd<-sd(wpower$AGE)
+#y_sd
+
+#sample size
+n <- length(wpower$AGE)
+#n
+
+#two standard deviation interval endpoints
+upperlim <- y_bar + 2*y_sd
+lowerlim <- y_bar - 2*y_sd
+
+```
+
+|DESCRIPTIVE STATISTICS|
+|------|-------|
+| N |  `r n`|
+|Sample Mean | `r y_bar`|
+|Sample Median | `r y_mid`|
+|Sample Variance | `r y_var`|
+|Sample Standard Deviation | `r y_sd`|  
+
+
+
+
+4. Using the descriptive statistics you calculated, get a two standard deviation interval around the mean. 
+
+*The two standard deviation interval is (`r lowerlim`, `r upperlim`).*
+
+```{r}
+
+stem(wpower$AGE)
+
+#100*47/50
+```
+
+5. What proportion of the values from the data set fall within the interval? 
+
+*Exactly 47 of 50 observations fall within 2 standard deviations of the mean. This is 94% of the sample.*

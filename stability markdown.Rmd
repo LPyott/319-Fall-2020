@@ -1,28 +1,76 @@
 ---
-title: "Stability (koleva data)"
+title: "Stability (STB1 data)"
 author: "LCP"
 date: "2/12/2020"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = FALSE)
 
-
-
-```{r stab1, include=TRUE, echo=TRUE}
 library(car)
 setwd("c:/data/csv")
-koleva <-read.csv("koleva.csv", header=TRUE)
-bbatch <-as.character(batch)
-#head(koleva)
-model <-lm(assay...~month*batch+batch+month, data=koleva)
-summary(model)
-anova(model)
-Anova(model, type="III")
+koleva <-read.csv("stb1.csv", header=TRUE)
+options(scipen=5)
+head(koleva)
+bbatch <-as.character(koleva$Batch)
 ```
 
 
 
+```{r slopes, include=TRUE, echo=TRUE}
 
+model1 <-lm(Potency~Month+bbatch+Month*bbatch, data=koleva)
+summary(model1)
+
+anovatable1<-anova(model1)
+anovatable1
+
+pval1<-anovatable1$`Pr(>F)`[3]
+pval1
+```
+
+For the interaction term, the p-value is `r pval1`. Compare this p-value (p1) to alpha=.25. If p1 is greater than .25, then the degradation rates are similar for the batches (parallel lines). The interaction term can be removed from the model, and the reduced model should be evaluated.
+
+If the p-value is less than alpha=.25, then the slopes are different. The interaction model is used to predict the shelf-life. 
+
+$~$
+
+The interaction model is y=`r model1$coefficients[1]` + `r model1$coefficients[2]` 
+* Month + `r model1$coefficients[3]` * batch2 + `r model1$coefficients[4]`* batch3 + `r model1$coefficients[5]`* Month * batch2 + `r model1$coefficients[6]`* Month * batch3
+
+```{r y_intercepts}
+model2 <-lm(Potency~bbatch+Month, data=koleva)
+summary(model2)
+anova(model2)
+
+anovatable2<-anova(model2)
+pval2<-anovatable2$`Pr(>F)`[2]
+pval2
+```
+
+
+For the batch term, the p-value is `r pval2`. Compare this p-value (p2) to alpha=.25. If p1 is greater than .25, then the initial potency values of the batches are similar. The batch term can be removed from the model, and the reduced model should be evaluated.
+
+If the p-value is less than alpha=.25, then the y-intercepts are different. The batch+Month model is used to predict the shelf-life. 
+
+$~$
+
+The batch+Month model is y=`r model2$coefficients[1]` + `r model2$coefficients[2]` 
+* batch2 + `r model2$coefficients[3]` * batch3 + `r model2$coefficients[4]`* Month
+
+```{r time_only}
+model3 <-lm(Potency~Month, data=koleva)
+summary(model3)
+anova(model3)
+
+anovatable3<-anova(model3)
+pval3<-anovatable3$`Pr(>F)`[1]
+pval3
+```
+
+If both the interaction term (i.e. degradation rate) and the batch term (i.e. the batch-to-batch variation at time t=0) are not significant at the alpha =. 25 level, then then the batches can be pooled. The simplest model, potency=time, is used to calculate the shelf life. 
+
+$~$
+
+The Month-only model is y=`r model3$coefficients[1]` + `r model3$coefficients[2]` * Month. 
